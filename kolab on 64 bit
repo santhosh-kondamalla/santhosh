@@ -1,0 +1,193 @@
+1.vim /etc/sysconfig/network
+
+NETWORKING=yes
+HOSTNAME=mail.trimurtiseeds.com
+
+2.vim /etc/hosts
+
+172.16.13.138  mail.trimurtiseedcs.com
+
+3.vim /etc/sysconfig/selinux
+
+# This file controls the state of SELinux on the system.
+# SELINUX= can take one of these three values:
+#     enforcing - SELinux security policy is enforced.
+#     permissive - SELinux prints warnings instead of enforcing.
+#     disabled - No SELinux policy is loaded.
+SELINUX=permissive
+# SELINUXTYPE= can take one of these two values:
+#     targeted - Targeted processes are protected,
+#     mls - Multi Level Security protection.
+SELINUXTYPE=targeted
+
+4.setenforce 0
+
+5.service iptables stop
+
+6.chkconfig iptables off
+
+7.vim /etc/yum.repos.d/CentOS-Base.repo(add enable=0)
+
+#additional packages that may be useful
+[extras]
+enabled=0
+name=CentOS-$releasever - Extras
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=extras
+#baseurl=http://mirror.centos.org/centos/$releasever/extras/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+
+8.rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+
+9.yum install yum-plugin-priorities
+
+10.rpm -Uvh http://mirror.kolabsys.com/pub/redhat/kolab-3.0/el6/release/x86_64/kolab-3.0-community-release-6-2.el6.kolab_3.0.noarch.rpm
+
+11.yum repolist
+
+12.yum install kolab
+
+13.setup-kolab
+
+Please supply a password for the LDAP administrator user 'admin', used to login
+to the graphical console of 389 Directory server.
+
+Administrator password [vHDd-zTtUWgywWl]:
+Confirm Administrator password:
+
+Please supply a password for the LDAP Directory Manager user, which is the
+administrator user you will be using to at least initially log in to the Web
+Admin, and that Kolab uses to perform administrative tasks.
+
+Directory Manager password [M1RjiNOxhe197S4]:
+Confirm Directory Manager password:
+
+Please choose the system user and group the service should use to run under.
+These should be existing, unprivileged, local system POSIX accounts with no
+shell.
+
+User [nobody]:
+Group [nobody]:
+
+This setup procedure plans to set up Kolab Groupware for the following domain
+name space. This domain name is obtained from the reverse DNS entry on your
+network interface. Please confirm this is the appropriate domain name space.
+
+bmts.us [Y/n]: y
+
+The standard root dn we composed for you follows. Please confirm this is the root
+dn you wish to use.
+
+dc=bmts,dc=us [Y/n]: y
+
+Setup is now going to set up the 389 Directory Server. This may take a little
+while (during which period there is no output and no progress indication).
+
+Shutting down dirsrv:
+    kolab...                                               [  OK  ]
+Starting dirsrv:
+    kolab...                                               [  OK  ]
+
+Please supply a Cyrus Administrator password. This password is used by Kolab to
+execute administrative tasks in Cyrus IMAP. You may also need the password
+yourself to troubleshoot Cyrus IMAP and/or perform other administrative tasks
+against Cyrus IMAP directly.
+
+Cyrus Administrator password [5F5LAKnkNbuyuf7]:
+Confirm Cyrus Administrator password:
+
+Please supply a Kolab Service account password. This account is used by various
+services such as Postfix, and Roundcube, as anonymous binds to the LDAP server
+will not be allowed.
+
+Kolab Service password [bkfzDKYhnAp-9qy]:
+Confirm Kolab Service password:
+Shutting down postfix:                                     [  OK  ]
+Starting postfix:                                          [  OK  ]
+Shutting down amavisd: The amavisd daemon is apparently not running, no PID file /var/run/amavisd/amavisd.pid
+                                                           [FAILED]
+
+Starting amavisd:                                          [  OK  ]
+
+Stopping clamd.amavisd:                                    [FAILED]
+Starting clamd.amavisd: LibClamAV Warning: **************************************************
+LibClamAV Warning: ***  The virus database is older than 7 days!  ***
+LibClamAV Warning: ***   Please update it as soon as possible.    ***
+LibClamAV Warning: **************************************************
+                                                           [  OK  ]
+Stopping wallaced:                                         [FAILED]
+Starting wallaced:                                         [  OK  ]
+Stopping mysqld:                                           [  OK  ]
+Initializing MySQL database:  Installing MySQL system tables...
+OK
+Filling help tables...
+OK
+
+To start mysqld at boot time you have to copy
+support-files/mysql.server to the right place for your system
+
+PLEASE REMEMBER TO SET A PASSWORD FOR THE MySQL root USER !
+To do so, start the server, then issue the following commands:
+
+/usr/bin/mysqladmin -u root password 'new-password'
+/usr/bin/mysqladmin -u root -h centkolab.bmts.us password 'new-password'
+
+Alternatively you can run:
+/usr/bin/mysql_secure_installation
+
+which will also give you the option of removing the test
+databases and anonymous user created by default.  This is
+strongly recommended for production servers.
+
+See the manual for more instructions.
+
+You can start the MySQL daemon with:
+cd /usr ; /usr/bin/mysqld_safe &
+
+You can test the MySQL daemon with mysql-test-run.pl
+cd /usr/mysql-test ; perl mysql-test-run.pl
+
+Please report any problems with the /usr/bin/mysqlbug script!
+
+                                                           [  OK  ]
+Starting mysqld:                                           [  OK  ]
+
+Please supply a root password for MySQL. This password will be the administrative
+user for this MySQL server, and it should be kept a secret. After this setup
+process has completed, Kolab is going to discard and forget about this password,
+but you will need it for administrative tasks in MySQL.
+
+MySQL root password [nM-hUj1MMhQrjO0]:
+Confirm MySQL root password:
+
+Please supply a password for the MySQL user 'kolab'. This password will be used
+by Kolab services, such as the Web Administration Panel.
+
+MySQL kolab password [kC32AHaJdZMGAyC]:
+Confirm MySQL kolab password:
+
+Please supply the timezone PHP should be using.
+
+Timezone ID [UTC]: America/Central
+
+Please supply a password for the MySQL user 'roundcube'. This password will be
+used by the Roundcube webmail interface.
+
+MySQL roundcube password [heQn8k5P9R6F9xy]:
+Confirm MySQL roundcube password:
+Stopping httpd:                                            [FAILED]
+Starting httpd: httpd: Could not reliably determine the server's fully qualified domain name, using centkolab.bmts.us for ServerName
+                                                           [  OK  ]
+Stopping httpd:                                            [  OK  ]
+Starting httpd: httpd: Could not reliably determine the server's fully qualified domain name, using centkolab.bmts.us for ServerName
+                                                           [  OK  ]
+Stopping kolab-saslauthd:                                  [FAILED]
+Starting kolab-saslauthd:                                  [  OK  ]
+Shutting down cyrus-imapd:                                 [FAILED]
+Starting cyrus-imapd:                                      [  OK  ]
+Stopping kolabd:                                           [FAILED]
+Starting kolabd:                                           [  OK  ]
+
+14.http://172.16.13.138/kolab-webadmin
+
+15.http://172.16.13.138/roundcubemail
