@@ -1,0 +1,462 @@
+DNS, Domain Name System, translates hostnames or URLs into IP addresses. For example if we type www.unixmen.com in browser, the DNS server translates the domain name into its associated ip address. Since the IP addresses are hard to remember, DNS servers are used to translate the hostnames like www.unixmen.com to 173.xxx.xx.xxx. So it makes easy to remember the domain names instead of its IP address.
+
+DNS Server Installation in CentOS 6.5/6.4/6.3
+Scenario
+
+ 
+Primary(Master) DNS Server Details:
+
+Operating System     : CentOS 6.5 server
+Hostname             : masterdns.unixmen.local
+IP Address           : 192.168.1.100/24
+
+Secondary(Slave) DNS Server Details:
+
+Operating System     : CentOS 6.5 server
+Hostname             : secondarydns.unixmen.local
+IP Address           : 192.168.1.101/24
+
+Client Details:
+
+Operating System     : CentOS 6.5 Desktop  
+Hostname             : Client.unixmen.local
+IP Address           : 192.168.1.102/24
+
+Setup Primary(Master) DNS Server
+
+[root@masterdns ~]# yum install bind* -y
+
+1. Configure DNS Server
+
+Add the lines as shown below in ‘/etc/named.conf’ file
+
+[root@masterdns ~]# vi /etc/named.conf 
+//
+// named.conf
+//
+// Provided by Red Hat bind package to configure the ISC BIND named(8) DNS
+// server as a caching only nameserver (as a localhost DNS resolver only).
+//
+// See /usr/share/doc/bind*/sample/ for example named configuration files.
+//
+options {
+listen-on port 53 { 127.0.0.1; 192.168.1.100; }; ### Master DNS IP ###
+listen-on-v6 port 53 { ::1; };
+directory "/var/named";
+dump-file "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+allow-query     { localhost; 192.168.1.0/24; }; ### IP Range ### 
+allow-transfer{ localhost; 192.168.1.101; };   ### Slave DNS IP ###
+recursion yes;
+dnssec-enable yes;
+dnssec-validation yes;
+dnssec-lookaside auto;
+/* Path to ISC DLV key */
+bindkeys-file "/etc/named.iscdlv.key";
+managed-keys-directory "/var/named/dynamic";
+};
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+};
+zone "." IN {
+type hint;
+file "named.ca";
+};
+zone"unixmen.local" IN {
+type master;
+file "forward.unixmen";
+allow-update { none; };
+};
+zone"1.168.192.in-addr.arpa" IN {
+type master;
+file "reverse.unixmen";
+allow-update { none; };
+};
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+
+2. Create Zone files
+
+Create forward and reverse zone files which we mentioned in the ‘/etc/named.conf’ file.
+2.1 Create Forward Zone
+
+Create forward.unixmen file in the ‘/var/named’ directory.
+
+[root@masterdns ~]# vi /var/named/forward.unixmen
+$TTL 86400
+@   IN  SOA     masterdns.unixmen.local. root.unixmen.local. (
+        2011071001  ;Serial
+        3600        ;Refresh
+        1800        ;Retry
+        604800      ;Expire
+        86400       ;Minimum TTL
+)
+@       IN  NS          masterdns.unixmen.local.
+@       IN  NS          secondarydns.unixmen.local.
+@       IN  A           192.168.1.100
+@       IN  A           192.168.1.101
+@       IN  A           192.168.1.102
+masterdns       IN  A   192.168.1.100
+secondarydns    IN  A   192.168.1.101
+client          IN  A   192.168.1.102
+
+2.2 Create Reverse Zone
+
+Create reverse.unixmen file in the ‘/var/named’ directory.
+
+[root@masterdns ~]# vi /var/named/reverse.unixmen 
+$TTL 86400
+@   IN  SOA     masterdns.unixmen.local. root.unixmen.local. (
+        2011071001  ;Serial
+        3600        ;Refresh
+        1800        ;Retry
+        604800      ;Expire
+        86400       ;Minimum TTL
+)
+@       IN  NS          masterdns.unixmen.local.
+@       IN  NS          secondarydns.unixmen.local.
+@       IN  PTR         unixmen.local.
+masterdns       IN  A   192.168.1.100
+secondarydns    IN  A   192.168.1.101
+client          IN  A   192.168.1.102
+100     IN  PTR         masterdns.unixmen.local.
+101     IN  PTR         secondarydns.unixmen.local.
+102     IN  PTR         client.unixmen.local.
+
+3. Start the DNS service
+
+[root@masterdns ~]# service named start
+Starting named:                                            [  OK  ]
+[root@masterdns ~]# chkconfig named on
+
+4. Adjust iptables to allow DNS server from outside of the network
+
+Add the lines as shown below in ‘/etc/sysconfig/iptables’ file.
+
+[root@masterdns ~]# vi /etc/sysconfig/iptables
+# Firewall configuration written by system-config-firewall
+# Manual customization of this file is not recommended.
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -p udp -m state --state NEW --dport 53 -j ACCEPT
+-A INPUT -p tcp -m state --state NEW --dport 53 -j ACCEPT
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+COMMIT
+
+5. Restart iptables
+
+[root@masterdns ~]# service iptables restart
+iptables: Flushing firewall rules:                         [  OK  ]
+iptables: Setting chains to policy ACCEPT: filter          [  OK  ]
+iptables: Unloading modules:                               [  OK  ]
+iptables: Applying firewall rules:                         [  OK  ]
+
+6. Test DNS configuration and zone files for any syntax errors
+
+[root@masterdns ~]# named-checkconf /etc/named.conf 
+[root@masterdns ~]# named-checkzone unixmen.local /var/named/forward.unixmen 
+zone unixmen.local/IN: loaded serial 2011071001
+OK
+[root@masterdns ~]# named-checkzone unixmen.local /var/named/reverse.unixmen 
+zone unixmen.local/IN: loaded serial 2011071001
+OK
+
+7. Test DNS Server
+
+[root@masterdns ~]# dig masterdns.unixmen.local
+; <<>> DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.6 <<>> masterdns.unixmen.local
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 49834
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 1
+;; QUESTION SECTION:
+;masterdns.unixmen.local.INA
+;; ANSWER SECTION:
+masterdns.unixmen.local. 86400INA192.168.1.100
+;; AUTHORITY SECTION:
+unixmen.local.86400INNSsecondarydns.unixmen.local.
+unixmen.local.86400INNSmasterdns.unixmen.local.
+;; ADDITIONAL SECTION:
+secondarydns.unixmen.local. 86400 INA192.168.1.101
+;; Query time: 6 msec
+;; SERVER: 192.168.1.100#53(192.168.1.100)
+;; WHEN: Thu Mar  7 13:07:56 2013
+;; MSG SIZE  rcvd: 114
+
+[root@masterdns ~]# nslookup unixmen.local
+Server:192.168.1.100
+Address:192.168.1.100#53
+Name:unixmen.local
+Address: 192.168.1.102
+Name:unixmen.local
+Address: 192.168.1.100
+Name:unixmen.local
+Address: 192.168.1.101
+
+Now the Primary DNS server is ready to use.
+Setup Secondary(Slave) DNS Server
+
+[root@secondarydns ~]# yum install bind* -y
+
+1. Configure Slave DNS Server
+
+Open the main configuration file ‘/etc/named.conf’ and add the lines as shown below.
+
+[root@secondarydns ~]# vi /etc/named.conf 
+//
+// named.conf
+//
+// Provided by Red Hat bind package to configure the ISC BIND named(8) DNS
+// server as a caching only nameserver (as a localhost DNS resolver only).
+//
+// See /usr/share/doc/bind*/sample/ for example named configuration files.
+//
+options {
+listen-on port 53 { 127.0.0.1; 192.168.1.101; };
+listen-on-v6 port 53 { ::1; };
+directory "/var/named";
+dump-file "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+allow-query     { localhost; 192.168.1.0/24; };
+recursion yes;
+dnssec-enable yes;
+dnssec-validation yes;
+dnssec-lookaside auto;
+/* Path to ISC DLV key */
+bindkeys-file "/etc/named.iscdlv.key";
+managed-keys-directory "/var/named/dynamic";
+};
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+};
+zone "." IN {
+type hint;
+file "named.ca";
+};
+zone"unixmen.local" IN {
+type slave;
+file "slaves/unixmen.fwd";
+masters { 192.168.1.100; };
+};
+zone"1.168.192.in-addr.arpa" IN {
+type slave;
+file "slaves/unixmen.rev";
+masters { 192.168.1.100; };
+};
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+
+2. Start the DNS Service
+
+[root@secondarydns ~]# service named start
+Generating /etc/rndc.key:                                  [  OK  ]
+Starting named:                                            [  OK  ]
+[root@secondarydns ~]# chkconfig named on
+
+Now the forward and reverse zones are automatically replicated from Master DNS server to ‘/var/named/slaves/’ in Secondary DNS server.
+
+[root@secondarydns ~]# ls /var/named/slaves/
+unixmen.fwd  unixmen.rev
+
+[root@secondarydns ~]# cat /var/named/slaves/unixmen.fwd 
+$ORIGIN .
+$TTL 86400; 1 day
+unixmen.localIN SOAmasterdns.unixmen.local. root.unixmen.local. (
+2011071001 ; serial
+3600       ; refresh (1 hour)
+1800       ; retry (30 minutes)
+604800     ; expire (1 week)
+86400      ; minimum (1 day)
+)
+NS masterdns.unixmen.local.
+NS secondarydns.unixmen.local.
+A192.168.1.100
+A192.168.1.101
+A192.168.1.102
+$ORIGIN unixmen.local.
+clientA192.168.1.102
+masterdnsA192.168.1.100
+secondarydnsA192.168.1.101
+
+[root@secondarydns ~]# cat /var/named/slaves/unixmen.rev 
+$ORIGIN .
+$TTL 86400; 1 day
+1.168.192.in-addr.arpaIN SOAmasterdns.unixmen.local. root.unixmen.local. (
+2011071001 ; serial
+3600       ; refresh (1 hour)
+1800       ; retry (30 minutes)
+604800     ; expire (1 week)
+86400      ; minimum (1 day)
+)
+NS masterdns.unixmen.local.
+NS secondarydns.unixmen.local.
+PTRunixmen.local.
+$ORIGIN 1.168.192.in-addr.arpa.
+100PTRmasterdns.unixmen.local.
+101PTRsecondarydns.unixmen.local.
+102PTRclient.unixmen.local.
+clientA192.168.1.102
+masterdnsA192.168.1.100
+secondarydnsA192.168.1.101
+
+3. Add the DNS Server details to all systems
+
+[root@secondarydns ~]# vi /etc/resolv.conf
+# Generated by NetworkManager
+search ostechnix.com
+nameserver 192.168.1.100
+nameserver 192.168.1.101
+nameserver 8.8.8.8
+
+4. Test DNS Server
+
+[root@secondarydns ~]# dig masterdns.unixmen.local
+; <<>> DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.6 <<>> masterdns.unixmen.local
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21487
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 1
+;; QUESTION SECTION:
+;masterdns.unixmen.local.INA
+;; ANSWER SECTION:
+masterdns.unixmen.local. 86400INA192.168.1.100
+;; AUTHORITY SECTION:
+unixmen.local.86400INNSmasterdns.unixmen.local.
+unixmen.local.86400INNSsecondarydns.unixmen.local.
+;; ADDITIONAL SECTION:
+secondarydns.unixmen.local. 86400 INA192.168.1.101
+;; Query time: 15 msec
+;; SERVER: 192.168.1.100#53(192.168.1.100)
+;; WHEN: Thu Mar  7 13:27:57 2013
+;; MSG SIZE  rcvd: 114
+
+[root@secondarydns ~]# dig secondarydns.unixmen.local
+; <<>> DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.6 <<>> secondarydns.unixmen.local
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20958
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 1
+;; QUESTION SECTION:
+;secondarydns.unixmen.local.INA
+;; ANSWER SECTION:
+secondarydns.unixmen.local. 86400 INA192.168.1.101
+;; AUTHORITY SECTION:
+unixmen.local.86400INNSmasterdns.unixmen.local.
+unixmen.local.86400INNSsecondarydns.unixmen.local.
+;; ADDITIONAL SECTION:
+masterdns.unixmen.local. 86400INA192.168.1.100
+;; Query time: 4 msec
+;; SERVER: 192.168.1.100#53(192.168.1.100)
+;; WHEN: Thu Mar  7 13:31:53 2013
+;; MSG SIZE  rcvd: 114
+
+[root@secondarydns ~]# nslookup unixmen.local
+Server:192.168.1.100
+Address:192.168.1.100#53
+Name:unixmen.local
+Address: 192.168.1.101
+Name:unixmen.local
+Address: 192.168.1.102
+Name:unixmen.local
+Address: 192.168.1.100
+
+Client Side Configuration
+
+Add the DNS server details in ‘/etc/resolv.conf’ file in all client systems
+
+[root@client unixmen]# vi /etc/resolv.conf
+# Generated by NetworkManager
+search unixmen.local
+nameserver 192.168.1.100
+nameserver 192.168.1.101
+nameserver 8.8.8.8
+
+Test DNS Server
+
+[root@client unixmen]# dig masterdns.unixmen.local
+; <<>> DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6 <<>> masterdns.unixmen.local
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 19496
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 1
+;; QUESTION SECTION:
+;masterdns.unixmen.local.INA
+;; ANSWER SECTION:
+masterdns.unixmen.local. 86400INA192.168.1.100
+;; AUTHORITY SECTION:
+unixmen.local.86400INNSmasterdns.unixmen.local.
+unixmen.local.86400INNSsecondarydns.unixmen.local.
+;; ADDITIONAL SECTION:
+secondarydns.unixmen.local. 86400 INA192.168.1.101
+;; Query time: 30 msec
+;; SERVER: 192.168.1.100#53(192.168.1.100)
+;; WHEN: Thu Mar  7 13:47:55 2013
+;; MSG SIZE  rcvd: 114
+
+[root@client unixmen]# dig secondarydns.unixmen.local
+; <<>> DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6 <<>> secondarydns.unixmen.local
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 14852
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 1
+;; QUESTION SECTION:
+;secondarydns.unixmen.local.INA
+;; ANSWER SECTION:
+secondarydns.unixmen.local. 86400 INA192.168.1.101
+;; AUTHORITY SECTION:
+unixmen.local.86400INNSsecondarydns.unixmen.local.
+unixmen.local.86400INNSmasterdns.unixmen.local.
+;; ADDITIONAL SECTION:
+masterdns.unixmen.local. 86400INA192.168.1.100
+;; Query time: 8 msec
+;; SERVER: 192.168.1.100#53(192.168.1.100)
+;; WHEN: Thu Mar  7 13:48:38 2013
+;; MSG SIZE  rcvd: 114
+
+[root@client unixmen]# dig client.unixmen.local
+; <<>> DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6 <<>> client.unixmen.local
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 14604
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 2
+;; QUESTION SECTION:
+;client.unixmen.local.INA
+;; ANSWER SECTION:
+client.unixmen.local.86400INA192.168.1.102
+;; AUTHORITY SECTION:
+unixmen.local.86400INNSmasterdns.unixmen.local.
+unixmen.local.86400INNSsecondarydns.unixmen.local.
+;; ADDITIONAL SECTION:
+masterdns.unixmen.local. 86400INA192.168.1.100
+secondarydns.unixmen.local. 86400 INA192.168.1.101
+;; Query time: 5 msec
+;; SERVER: 192.168.1.100#53(192.168.1.100)
+;; WHEN: Thu Mar  7 13:49:11 2013
+;; MSG SIZE  rcvd: 137
+
+[root@client unixmen]# nslookup unixmen.local
+Server:192.168.1.100
+Address:192.168.1.100#53
+Name:unixmen.local
+Address: 192.168.1.102
+Name:unixmen.local
+Address: 192.168.1.100
+Name:unixmen.local
+Address: 192.168.1.101
+
+Now the primary and secondary DNS servers are ready.
