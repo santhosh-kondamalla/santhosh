@@ -1,0 +1,285 @@
+1.xten-xlite installtion on ubuntu:
+
+http://www.wantlinux.net/2009/04/xten-x-lite-install-on-ubuntu-904/
+
+2.nagios mail configuration on centos:
+
+http://ricochen.wordpress.com/2012/04/18/use-external-smtp-server-to-send-nagios-alerts/
+
+3.Ldap server installtion:
+
+http://www.unixmen.com/setup-directory-serverldap-in-centos-6-4-rhel-6-4/
+
+4.your system is running low graphic mode:
+
+http://askubuntu.com/questions/141606/how-to-fix-the-system-is-running-in-low-graphics-mode-error
+
+5.Svn installtion in ubuntu :
+
+http://rbgeek.wordpress.com/2012/05/01/svn-server-on-ubuntu-12-04-lts-with-web-access/
+
+6.svn installtion second document:
+
+http://www.howtoforge.com/installing-subversion-and-configuring-access-through-different-protocols-on-ubuntu-11.10
+
+7.sudo.odt:
+
+http://www.psychocats.net/ubuntu/fixsudo
+
+8.Samba server article in centos:
+
+http://www.unixmen.com/samba-server-installation-and-configuration-in-centos-6-3-rhel-6-3/
+
+9.Samba server :
+
+http://rbgeek.wordpress.com/2012/04/25/how-to-install-samba-server-on-ubuntu-12-04/
+
+10.Remote backup synatx in rsync:
+
+http://www.maketecheasier.com/make-incremental-backups-with-rsync/2010/08/25
+
+11.lspci :is used for interfaces and devices to that systems
+
+12.redmine in ubuntu :
+
+http://www.redmine.org/projects/redmine/wiki/HowTo_Install_Redmine_on_Ubuntu_step_by_step
+
+13.Proxy server :
+
+http://www.krizna.com/centos/how-to-install-squid-proxy-on-centos-6/
+
+14.Postfix and dovecot and squirrel mail server in centos:
+
+http://ostechnix.wordpress.com/2013/02/08/setup-mail-server-using-postfixdovecotsquirrelmail-in-centosrhelscientific-linux-6-3-step-by-step/
+
+15.Nfs:
+
+https://www.digitalocean.com/community/articles/how-to-set-up-an-nfs-mount-on-ubuntu-12-04
+
+16.Linux network mapping in to linux system:
+
+http://www.cyberciti.biz/faq/linux-mount-cifs-windows-share/
+
+17.windows network mapping in to linux system:
+
+http://linux.koolsolutions.com/2008/05/19/mount-a-windows-network-share-on-linux-using-sambacifs/
+
+18.nagios for windows:
+
+http://www.thegeekstuff.com/2008/07/how-to-monitor-remote-windows-machine-using-nagios-on-linux/
+
+19.Ltsp cluster link:
+
+http://www.instructables.com/id/Ltsp-clustering/#step1
+
+http://www.instructables.com/id/Ltsp-clustering/step2/Install-ltsp-cluster-control/
+
+http://www.instructables.com/id/Ltsp-clustering/step3/Application-Server/
+
+
+20.Ldap 389 server in centos:
+
+
+http://ostechnix.wordpress.com/2013/02/05/setup-ldap-server-389ds-in-centosrhelscientific-linux-6-3-step-by-step/
+
+21.jboss on centos:
+
+http://www.davidghedini.com/pg/entry/install_jboss_7_on_centos
+
+22.Java installtion in centos
+
+http://tecadmin.net/steps-to-install-java-on-centos-5-6-or-rhel-5-6/#
+
+23.Iscsi installtion in centos:
+                                                            
+http://opentodo.net/2012/10/setup-iscsi-target-initiator-on-centos-6/
+
+24.increase kvm size
+
+http://sandilands.info/sgordon/increasing-kvm-virtual-machine-disk-using-lvm-ext4
+
+25.domain users:
+
+https://help.ubuntu.com/10.04/serverguide/likewise-open.html
+
+26.starwind v2v image converter:(refer)
+
+http://windowsdiskless.wordpress.com/how-to/06-converting-the-virtual-machine-vmdk-file-to-img-with-starwind-v2v-converter/
+
+27.download(link):
+
+http://starwindfreev2vconverter.m.en.softonic.com/
+
+28.lan ccboot :
+
+http://www.ccboot.com/lan-boot.htm
+
+29.convert gnome to kde:
+
+http://ubuntuforums.org/showthread.php?t=1849976
+
+30.Ubuntu 12.04 LTS PXE Network Installation Tutorial (with Ubuntu Live Graphical   Installer):
+
+http://s205blog.wordpress.com/2012/10/02/ubuntu-12-04-lte-pxe-network-installation-tutorial/
+
+31.vmdk to img converter:
+
+qemu-img convert -f vmdk -O raw centos64.vmdk centos64.img 
+
+32.image resize in kvm :
+
+sudo qemu-img resize /var/lib/libvirt/images/myvm.img 255G
+
+33.usb ports enable and disable except keyboard and mouse :
+
+http://www.howopensource.com/2011/08/how-to-disable-and-enable-usb-device-in-linux/
+
+34.redmine upgradition link:
+
+http://stackoverflow.com/questions/14520966/upgrade-from-redmine-1-3-2-to-redmine-2-2-2-on-ubuntu-12-04-1-lts
+
+http://grandslam90.wordpress.com/2012/05/22/howto-redmine-2-0-0-passenger-subversion-repositories-in-ubuntu-12-04/
+
+http://www.developerof.com/articles/install-redmine/
+
+35.resara server active directory on ubuntu 12.04:
+
+http://ostechnix.wordpress.com/2012/12/31/resara-server-an-alternative-opensource-linux-domain-controller-for-windows-active-directory-controller/
+
+36.tomcat installtion link:
+
+http://www.davidghedini.com/pg/entry/install_tomcat_7_on_centos
+
+37.tomcat in ubuntu url link:
+
+http://java.dzone.com/articles/installing-tomcat-7-ubuntu
+
+38.samba 4 active directory  installation and configuration:
+
+http://albertolarripa.com/2012/08/12/samba4-installation-and-configuration/
+
+39.iredmail installtion:
+
+http://www.unixmen.com/setup-mail-server-in-minutes-using-iredmail-in-ubuntu-12-10-debian-6/
+
+40.easy hosting control panel (ehcp) on ubuntu:
+
+http://www.unixmen.com/install-easy-hosting-control-panel-ehcp-in-ubuntu-1210-server-debian-6/
+
+41.ftp server in centos and ubuntu:
+
+http://www.unixmen.com/install-vsftpd-server-on-centos-rhel-scientific-linux-6-4/
+
+42.nfs server installtion in centos:
+
+http://www.unixmen.com/nfs-server-installation-and-configuration-in-centos-6-3-rhel-6-3-and-scientific-linux-6-3/
+
+43.dns server configuration:
+
+http://www.unixmen.com/dns-server-installation-step-by-step-using-centos-6-3/
+
+http://www.unixmen.com/how-to-find-best-and-fast-dns-servers-to-optimize-your-internet-speed/
+
+44.ldap server on centos 32 bit link:
+
+http://www.unixmen.com/setup-directory-serverldap-in-centos-6-4-rhel-6-4/
+
+45.add user in ldap:
+
+http://serverfault.com/questions/339245/how-to-install-ldap-server-and-add-a-user
+
+46.kolab 3.0 installtion in centos 64:
+
+http://kolab.org/blog/giorgos-strimpakos/2013/05/26/kolab-3.0-install-centos-6.4
+
+47.big blue button on centos:
+
+http://code.google.com/p/bigbluebutton/wiki/RPMPackaging
+
+48.remove last 10days files in linux:
+
+find   /path/to/files* -mtime +10 -exec rm {} \;
+
+50.linux questions and answers link:
+
+http://www.sanfoundry.com/technical-interview-questions/
+
+51.java 1.7.0-10 installtion link on ubuntu 12.04
+
+http://tumitces.tumblr.com/post/28250353906/setup-oracle-jdk-7u10-on-ubuntu-12-04-lts-server
+
+52.backup scripts in linux:
+
+http://helpdeskgeek.com/linux-tips/shell-script-backup-directory-linux/
+
+53.log files script:
+
+http://contoso.se/blog/?p=459
+
+54.ldap server installtion on ubuntu 12.04 and 12.10:
+
+http://www.unixmen.com/openldap-installation-and-configuration-in-ubuntu-12-10-server-debian-6/
+
+55.Setup Samba Domain Controller with LDAP Backend in Ubuntu 13.04  
+
+http://www.unixmen.com/setup-samba-domain-controller-with-openldap-backend-in-ubuntu-13-04/
+
+56.ubuntu login as a root user:
+
+http://www.liberiangeek.net/2012/05/login-as-root-in-ubuntu-12-04-precise-pangolin/
+
+57.nvdia drivers for ubuntu 12.04
+
+http://falkvinge.net/2013/02/15/how-to-install-nvidia-drivers-in-ubuntu-12-10-quantal/
+
+58.filezilla installtion on ubuntu:
+
+http://www.noobslab.com/2012/11/install-filezilla-in-ubuntu.html
+
+59.nautilus in  ubuntu:
+
+http://www.webupd8.org/2010/02/nautilus-elementary-gets-coverflow.html
+
+http://www.webupd8.org/2010/01/nautilus-elementary-simplified-nautilus.html
+
+http://www.webupd8.org/2010/09/install-nautilus-elementary-in-ubuntu.html
+
+http://www.ubuntugeek.com/install-nautilus-elementary-patched-version-of-nautilus-in-ubuntu-10-04-lucid9-10-karmic-using-ppa.html
+
+http://askubuntu.com/questions/5403/how-do-i-install-nautilus-elementary
+
+60.remote desktop on lubuntu:
+
+sudo apt-get install vino
+
+vino-preferences
+
+61.install jdk 7u10 on centos:
+
+http://tganecadmin.net/steps-to-install-java-on-centos-5-6-or-rhel-5-6/
+
+http://woltans.blogspot.in/2012/07/how-to-install-wine-on-debian.html
+
+62.command line email notifaction on ubuntu:
+
+http://www.tecmint.com/send-mail-from-command-line-using-mutt-command/
+
+63.zabbix server on centos:
+
+http://tecadmin.net/install-zabbix-network-monitoring-on-centos-rhel-and-fedora/
+
+64.zabbix agent:
+
+http://tecadmin.net/install-zabbix-agent-centos-rhel-and-ubuntu/
+
+http://tecadmin.net/add-host-zabbix-server-monitor/
+
+
+
+
+
+
+
+
+
+
