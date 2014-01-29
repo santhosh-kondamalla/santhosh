@@ -1,0 +1,189 @@
+Remote Desktop conncetion in lubuntu:
+
+(error:failed to conncet server :172.16.x.x)
+
+1.install vino on lubuntu
+
+2.press windows +r on the keyboard it is open the run 
+
+3.enter the vino-preferences on that run
+
+4.it will open desktop sharing center tick all the sharing checkboxes and in security just check the second option and enter the password (you wish)
+
+5.in show notification check the second option  and close
+
+6.open preferences---desktop session-settings---check the desktop sharing  ----ok
+
+7.log out the pc and conncet the tight vnc another system 
+
+(note:it is not conncted getting same error 
+
+1.log out the lubuntu-lxde desktop and enter lubuntu desktop(enter username and password fileds just select lubuntu)and apply the same procedure in that lubuntu also)
+
+2connect tightvnc another system it is connected just log out the pc
+
+3.and again login into lxde desktop and conncet the tight vnc to another system
+
+
+
+
+Stedmans installtion in ltsp clients:
+
+1.copy the stedman's  from 172.16.13.100/tech/edl/production softwares/STEDMAN's.tar.gz (wordweb.exe,jre-6u1-windows-i586-p.exe) on desktop
+
+2.extract the STEDMAN'S  using the below command
+
+tar -xvf  STEDMAN'S.tar.gz
+
+3.delete STEDMAN'S.tar.gz file on desktop
+
+4.copy the stedman's.sh  from  172.16.13.100/tech/edl/production softwares/
+
+5.replace with TRANSDYN\emm with who's login on the system
+
+6.save the document using another name(ex: transdyne.sh)
+
+7 give full permissions on transdyne.sh using below commands
+
+ chmod 777 transdyne.sh (don't use sudo on ltsp clents it can use only on app server)
+
+8.just run this command in the desktop
+
+$cd Desktop
+
+$./transdyne.sh
+
+9. it wall automatically install allthe stedman's
+
+Recover the libreoffice problem on lubuntu ltsp clients:
+
+1.if any body getting lubuntu ctrl+f10 and f11 problem pls follow
+
+2.just open the /home/likewise-open/TRANSDYNE/edl(loggin user)/.config/openbox/
+
+3.copy the lubuntu-rc.xml on 172.16.13.100/tech/edl  and paste  the /home/likewise-open/TRANSDYNE/edl(loggin user)/.config/openbox/ it will ask overwrite just press enter
+
+4.logoff the use login and again login the user and check it (if u install lxde Desktop on just copy lxde.xml and paste it)
+
+Recover the  the lww problem on lubuntu ltsp clents:
+
+ 1.if u getting lww problem on ltsp clients please following this doc
+
+2.just copy the 172.16.13.100/tech/edl/production softwares/LWW Ready Reference Bookshelf.tar.gz  on the client desktop
+ 
+3.copy the  172.16.13.100/tech/edl/production java/jre-6u1-windows-i586-p.exe on client desktop
+
+4.just install jre-6u1-windows-i586-p.exe using wine
+
+5.then extract the  LWW Ready Reference Bookshelf.tar.gz on the desktop using below commands
+
+tar -xvf  LWW Ready Reference Bookshelf.tar.gz
+
+6.remove the   LWW Ready Reference Bookshelf.tar.gz from the desktop and open the  LWW Ready Reference Bookshelf and install Wssetup.exe on wine
+
+7.after complete the installtion Ready Reference Bookshelf.exe open with wine 	it will open on the desktop(don't delete  LWW Ready Reference Bookshelf on to the desktop)
+
+Recovering sharing problem on lubuntu 
+
+1. install nautilus on app server in that case we can recover the sharing problem
+
+2.open the command prompt  type nautilus it can open the window
+
+3.if u conncet gui mode cretae shortcut on desktop right on desktop createnew---shortcut---ok--enter---below diagram will be displaed please follow as the same
+
+ 
+
+
+it will create shortcut automatically
+
+4.based on nautilus version u can conncet the server (in centos way) other way double click on nautilus shortcut it will open the window 
+
+5.right side corner of the window small circle icon is there just click on the circle in that conncet to server option is there just click on the icon it can display below diagram
+
+
+
+
+
+6. in that server address bar just type below command smb://edl(logged user)@172.16.13.100/tech(any server)/
+
+7.it will ask domain-name and password for the current user password  just enter it , when u log on the system in that time only it cal ask the password
+
+lock the Desktop:
+
+1.enter the ctrl+alt+l(u are in lxde)
+
+Installtion of wordweb:(second method)
+
+1.copy the wordweb.exe from 172.16.13.100/tech/edl/production softwares/ on desktop
+
+2.open the command prompt just run below command 
+ 
+$cd Desktop
+ wine wordweb.exe                                                                                                                                                      
+
+ smartflow link usion script with out jnlp:
+
+1.create  desktop shortcut on ltsp client right click on the computer create---new--shortcut
+2.it will display below diagram
+
+                                                                                                                                   
+3.just enter the name as your wish
+
+4.press ok next it will display like this
+
+
+5.enter the name “smartflow” and command is where you put smartflow script file in app server
+
+in my case i use “/home/transdyne/Desktop/smartflow.sh” and then press “ok”
+
+6.just double click the shortcut it cam snartflow for the user just enter username and password
+
+
+
+#!/bin/sh
+
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"Abbrev New"/
+  wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/Abbrv/
+  wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/Cardio/
+  wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"Equip Words"/
+  wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"Med Dic"/
+  wine SETUP.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/Nephrology/
+  wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/Neurology/
+   wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"Ortho Rehab Words"/
+  wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"Alternative and Complimentary Words"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"CardioVascular Pulmonary Words"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"Dermatology Immunology Words"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"Emergency Medicine Words"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"Equipment Words"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"Medical Eponyms"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"Obgyn and Pediatric Words"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"Organisms Infectious Disease words"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"Pathology Labmedicine Words"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/"STEDMAN'S"/"New Soft"/"Radiology Oncology Words"/
+ wine Setup.EXE
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/
+ wine jre-6u1-windows-i586-p.exe
+cd /home/likewise-open/TRANSDYN/ewz/Desktop/
+ wine wordweb6.exe
+
+
+
+
+
