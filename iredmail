@@ -1,0 +1,111 @@
+
+System Requirements:
+
+
+WARNING: iRedMail is designed to be deployed on a FRESH server system, which means your server does NOT have mail related components installed,
+e.g. MySQL, OpenLDAP, Postfix, Dovecot, Amavisd, etc (iRedMail will install and configure them for you automatically). Otherwise it may override your existing files/configurations althought it will backup files before modifing, and it may be not working as expected.
+
+To install iRedMail, you need:
+
+A FRESH, working RHEL, CentOS, Scientific Linux system. Supported releases are listed on page Features of iRedMail.
+At least 1GB of memory is required for production use. if you have less memory, you have to disable spam/virus scanning by following our wiki tutorial. WARNING: It's strongly recommended to enable spam/virus scanning for production use, so please go get at least 1GB memory for your mail server.
+
+Preparations:
+
+Set a fully qualified domain name (FQDN) hostname on your server
+
+Enter command 'hostname -f' to view the current hostname:
+
+$ hostname -f
+
+mx.example.com
+
+On RHEL/CentOS/Scientific Linux, hostname is set in two files:
+
+/etc/sysconfig/network: hostname setting
+
+# Part of file: /etc/sysconfig/network
+HOSTNAME=mx.example.com
+
+    /etc/hosts: hostname <=> IP address mapping. Warning: List the FQDN hostname as first item.
+
+# Part of file: /etc/hosts
+127.0.0.1   mx.example.com demo localhost localhost.localdomain
+
+Verify the FQDN hostname. If it wasn't changed, please reboot server to make it work.
+
+$ hostname -f
+mx.example.com
+
+Enable yum repositories for installing new packages:
+
+    For CentOS or Scientific Linux, please enable CentOS/Scientific official yum repositories, and DISABLE all third-party yum repositories to avoid package conflict.
+    For Red Hat Enterprise Linux, please enable Red Hat Network to install packages, or create a local yum repository with DVD/CD ISO images.
+
+Download the latest release of iRedMail:
+
+    Visit Download page to get the latest release of iRedMail.
+    Upload iRedMail to your mail server via ftp or scp or whatever method you can use, login to the server to install iRedMail. We assume you uploaded it to directory /root/iRedMail-x.y.z.tar.bz2 (replace x.y.z by the actual version number).
+    Uncompress iRedMail tarball:
+
+# cd /root/
+# tar xjf iRedMail-x.y.z.tar.bz2
+
+Start iRedMail installer:
+
+It's now ready to start iRedMail installer, it will ask you some simple questions, that's all steps to setup a full-featured mail server.
+For Chinese users: Our domain name "iredmail.org" is blocked in China mainland since Jun 04, 2011, please replace all 'iredmail.org' by its IP address "106.187.51.47" (without quotes) in /root/iRedMail-x.y.z/pkgs/get_all.sh BEFORE executing "iRedMail.sh". This is a Linode VPS hosted on Tokyo, Japan.
+
+# cd /root/iRedMail-x.y.z/
+# bash iRedMail.sh
+
+Screenshots of installation:
+
+1) Welcome and thanks for your use
+
+2) Specify location to store all mailboxes. Default is /var/vmail/.
+
+3) Choose backend used to store mail accounts. Please choose the one which you're familiar with. You can manage mail accounts with iRedAdmin, our web-based iRedMail admin panel.
+
+4) If you choose to store mail accounts in OpenLDAP, iRedMail installer will ask you two questions about OpenLDAP.
+
+4.1) LDAP suffix.
+
+4.2) Password of LDAP root dn.
+
+5) Set password of MySQL root user. MySQL is used to store data of other applications, e.g. Roundcube webmail, Policyd, Amavisd-new. If you choose to store mail accounts in MySQL, you will see this dialog too.
+
+6) Add your first mail domain name
+
+7) Set password of admin account of your first mail domain. Note:
+
+    This account is used only for system administration, not a mail user. That means you CANNOT login to webmail with this account.
+    You can login to iRedAdmin (web-based iRedMail admin panel) with this account for mail accont management, login name is full email address.
+    Admin username is hard-coded, you can create new admins with iRedAdmin after installation completed.
+
+8) Set password of first mail user of your first mail domain. Note:
+
+    This account is a normal mail user, that means you can login to webmail with this account, login name is full email address.
+    Username is hard-coded, you can create new mail users with iRedAdmin after installation completed.
+
+9) Choose optional components
+
+After answered these questions, iRedMail installer will ask your confirm to start installation. It will install and configure required packages automatically. Type 'y' or 'Y' (without quotes) and press 'Enter' to confirm.
+
+Configuration completed.
+
+*************************************************************************
+**************************** WARNING ***********************************
+*************************************************************************
+*                                                                       *
+* Please do remember to *REMOVE* configuration file after installation  *
+* completed successfully.                                               *
+*                                                                       *
+*   * /root/iRedMail-x.y.z/config
+*                                                                       *
+*************************************************************************
+<<< iRedMail >>> Continue? [Y|n]        # <- Type 'Y' or 'y' here, and press 'Enter' to continue
+
+Important things you should know after installation
+
+    Read file /root/iRedMail-x.y.z/iRedMail.tips first, it contains:
